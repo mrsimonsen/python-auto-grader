@@ -1,5 +1,15 @@
-import pytest
-import give5 as student
+import importlib.util
 
-def test1():
-    assert student.give5() == 5
+def tests(file):
+    spec = importlib.util.spec_from_file_location(file,f"./{file}")
+    student = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(student)
+    total = 1
+    score = 0
+
+    if student.give5() == 5:
+        score += 1
+
+
+    rep = f"{score}/{total}"
+    return rep

@@ -1,12 +1,14 @@
 import os, shutil
-import hi_test
+import give5_test as master
 
 def intro():
     print("Python Grader")
     print("This program needs to be ran from the parent directory of the collection of student repos")
     print()
-    assignment = 'test1'#input("What is the name of the assignment folder?\n")
-    file = 'hi.py'#input("What is the name of the file?\n")
+    assignment = input("What is the name of the assignment folder?\n")
+    file = input("What is the name of the file?\n")
+    if file [-3:] != ".py":
+        file += ".py"
     return assignment, file
 
 def gather(assignment, file):
@@ -25,7 +27,7 @@ def grade():
     os.chdir('testing')
     files = [f.name for f in os.scandir() if f.is_file()]
     for i in files:
-        out = hi_test.tests(i)
+        out = master.tests(i)
         file.write(f"{i}: {out}\n")
 
     file.close()
