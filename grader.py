@@ -1,4 +1,5 @@
-import os
+import os, pytest
+import test_hi as test
 
 def intro():
     print("Python Grader")
@@ -17,7 +18,11 @@ def outro(errors):
 
 def grade(test, path):
     errors = []
-    
+    root = os.getcwd()
+    for folder in os.directory():# TODO:
+        os.chdir(path)
+        pytest.main()
+
     #for each folder in the directory
         #change working directory to folder/assignment
         #set collection of output
