@@ -1,47 +1,44 @@
-import os, pytest
-import test_hi as test
+import os, shutil
+import hi_test
 
 def intro():
     print("Python Grader")
     print("This program needs to be ran from the parent directory of the collection of student repos")
     print()
-    assignment = input("What is the path of the assignment?\n")
-    test = input("What is the name of the test file?\n")
-    return test, assignment
+    assignment = 'test1'#input("What is the name of the assignment folder?\n")
+    file = 'hi.py'#input("What is the name of the file?\n")
+    return assignment, file
 
-def outro(errors):
-    print("Testing complete")
-    if errors:
-        print(f"There were {len(errors)} errors:")
-        for i in errors:
-            print(i)
-
-def grade(test, path):
-    errors = []
+def gather(assignment, file):
     root = os.getcwd()
-    for folder in os.directory():# TODO:
-        os.chdir(path)
-        pytest.main()
+    subfolders = [f.name for f in os.scandir(root) if f.is_dir()]
+    subfolders.remove('.git')
+    subfolders.remove('__pycache__')
+    os.mkdir("testing")
+    for folder in subfolders:
+        shutil.copyfile(os.path.join(root,folder,assignment,file), os.path.join(root,'testing',folder+'_'+file))
+    print('files gatherd, moveing to grading')
 
-    #for each folder in the directory
-        #change working directory to folder/assignment
-        #set collection of output
-        #run tests
-        #save output to file under folder name
-        #if can't run tests
-            #add folder name to errors
-    #close file
-    #return name list
-    return errors
+def grade():
+    root = os.getcwd()
+    file = open('report.txt','w')
+    os.chdir('testing')
+    files = [f.name for f in os.scandir() if f.is_file()]
+    for i in files:
+        out = hi_test.tests(i)
+        file.write(f"{i}: {out}\n")
 
-
+    file.close()
+    os.chdir(root)
+    shutil.rmtree('testing')
 
 
 def main():
-    test, assignment = intro()
-    errors = grade(test, assignment)
-    outro(errors)
-    input("Press enter to exit...")
+    assignment, file= intro()
+    gather(assignment, file)
+    grade()
+    print("Testing complete")
+    #input("Press enter to exit...")
 
 if __name__ == '__main__':
     main()
