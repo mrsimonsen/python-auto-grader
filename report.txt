@@ -1,2 +1,0 @@
-Student1_give5.py: 1/1
-Student2_give5.py: 1/1
