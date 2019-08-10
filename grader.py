@@ -1,3 +1,5 @@
+import os
+
 def intro():
     print("Python Grader")
     print("This program needs to be ran from the parent directory of the collection of student repos")
@@ -15,6 +17,7 @@ def outro(errors):
 
 def grade(test, path):
     errors = []
+    
     #for each folder in the directory
         #change working directory to folder/assignment
         #set collection of output
@@ -33,6 +36,7 @@ def main():
     test, assignment = intro()
     errors = grade(test, assignment)
     outro(errors)
+    input("Press enter to exit...")
 
 if __name__ == '__main__':
     main()
