@@ -13,25 +13,19 @@ def intro():
 def gather(assignment, file):
     root = os.getcwd()
     subfolders = [f.name for f in os.scandir(root) if f.is_dir()]
-    try:
-        subfolders.remove('.git')
-    except:
-        pass
-    try:
-        subfolders.remove('__pycache__')
-    except:
-        pass
+    subfolders.remove('.git')
+    subfolders.remove('__pycache__')
     os.mkdir("testing")
     for folder in subfolders:
         shutil.copyfile(os.path.join(root,folder,assignment,file), os.path.join(root,'testing',folder+'_'+file))
-    print('files gatherd, moveing to grading')
+    print('files gatherd, moving to grading')
 
 def grade(file):
     root = os.getcwd()
     report = open('report.txt','w')
     os.chdir('testing')
     file = "test_"+file
-    spec = importlib.util.spec_from_file_location(file,f"../{file}")
+    spec = importlib.util.spec_from_file_location(file,f"./{file}")
     master = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(master)
     files = [f.name for f in os.scandir() if f.is_file()]

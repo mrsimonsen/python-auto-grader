@@ -18,7 +18,7 @@ def gather(assignment, file):
     os.mkdir("testing")
     for folder in subfolders:
         shutil.copyfile(os.path.join(root,folder,assignment,file), os.path.join(root,'testing',folder+'_'+file))
-    print('files gatherd, moveing to grading')
+    print('files gatherd, moving to grading')
 
 def grade(file):
     root = os.getcwd()
