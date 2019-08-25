@@ -55,6 +55,7 @@ def grade(file):
         out = master.tests(i)
         points = string_to_math(out)
         report.write(f"{i}: {out} -> {points} points\n")
+        ## TODO: make csv instead of txt --see A-B-day-calendar-generator
 
     report.close()
     os.chdir(root)
