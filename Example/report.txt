@@ -1,0 +1,2 @@
+Student1_hi.py: 1/1 -> 10.0 points
+Student2_hi.py: 1/1 -> 10.0 points

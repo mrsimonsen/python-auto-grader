@@ -4,11 +4,28 @@ def intro():
     print("Python Grader")
     print("This program needs to be ran from the parent directory of the collection of student repos")
     print()
-    assignment = input("What is the name of the assignment folder?\n")
-    file = input("What is the name of the file?\n")
-    if file [-3:] != ".py":
-        file += ".py"
-    return assignment, file
+    assignments = {'00':'00-hello-world','01':'01-calculator','02':'02-fortune-cookie',
+    '03':'03-coin-flipper','04':'04-guess-my-number-2.0','05':'05-dice-roller',
+    '06':'06-counter','07':'07-reverse-message','08':'08-right-triangle',
+    '09':'09-word-jumble-2.0','10':'10-sentence-scrambler','11':'11-character-creator',
+    '12':'12-guess-your-number','13':'13-pig-latin','14':'14-critter-caretaker-2.0',
+    '15':'15-trivia-challenge-2.0','1':'test1'}
+    file_names = {'00':'hello_world.py','01':'calculator.py','02':'fortune_cookie.py',
+    '03':'coin_flipper.py','04':'GMN2.py','05':'dice_roller.py',
+    '06':'counter.py','07':'reverse_message.py','08':'right_triangle.py',
+    '09':'WJ2.py','10':'scrambler.py','11':'character_creator.py',
+    '12':'guess_AI.py','13':'pig_latin.py','14':'CC2.py',
+    '15':'TC2.py','1':'hi.py'}
+    n = True
+    while n:
+        assign = input("What is the number of the assignment folder?\n")
+        try:
+            assign_name = assignments[assign]
+            file = file_names[assign]
+            n = False
+        except:
+            print("That wasn't a valid assignment number!")
+    return assign_name, file
 
 def gather(assignment, file):
     root = os.getcwd()
@@ -30,19 +47,33 @@ def grade(file):
     report = open('report.txt','w')
     os.chdir('testing')
     file = "test_"+file
-    spec = importlib.util.spec_from_file_location(file,f"./{file}")
+    spec = importlib.util.spec_from_file_location(file,os.path.join(root,file))
     master = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(master)
     files = [f.name for f in os.scandir() if f.is_file()]
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     for i in files:
         out = master.tests(i)
-        report.write(f"{i}: {out}\n")
+        points = string_to_math(out)
+        report.write(f"{i}: {out} -> {points} points\n")
 
     report.close()
     os.chdir(root)
     shutil.rmtree('testing')
 
+def string_to_math(thing):
+    if len(thing)%3==0:
+        #single digit values
+        total = int(thing[-1])
+        score = int(thing[0])
+    if len(thing)%5==0:
+        #double digit values
+        total = int(thing[-2:])
+        score = int(thing[:2])
+    if len(thing)%2==0:
+        #single digit score with 2 digit total
+        total = int(thing[-2:])
+        score = int(thing[0])
+    return round(score/total * 10,2)
 
 def main():
     assignment, file = intro()
