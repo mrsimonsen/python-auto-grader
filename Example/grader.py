@@ -1,4 +1,4 @@
-import os, shutil, importlib.util, csv
+import os, shutil, importlib.util, csv, subprocess
 
 assignments = {'00':'00-hello-world','01':'01-calculator','02':'02-fortune-cookie',
 '03':'03-coin-flipper','04':'04-guess-my-number-2.0','05':'05-dice-roller',
@@ -45,16 +45,24 @@ def gather(assignment, file):
         pass#folder doesn't exist
 
     os.mkdir("testing")
+    days = {}
+    PIPE = subprocess.PIPE
     for folder in subfolders:
-        shutil.copyfile(os.path.join(root,folder,assignment,file), os.path.join(root,'testing',folder+'_'+file))
+        name = folder+'_'+file
+        shutil.copyfile(os.path.join(root,folder,assignment,file), os.path.join(root,'testing',name))
+        p = subprocess.Popen(["git","log","-1","--format=%cd"],stdout=PIPE)
+        out = p.communicate()[0].decode()
+        days[name]= out
+    return days
 
 
-def grade(file):
+
+def grade(file,days):
     root = os.getcwd()
     os.chdir('testing')
     with open('report.csv','w',newline='') as f:
         w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        w.writerow(['Repo name','tests passed','points earned'])
+        w.writerow(['Repo name','on time?','tests passed','points earned'])
     file = "test_"+file
     spec = importlib.util.spec_from_file_location(file,os.path.join(root,file))
     master = importlib.util.module_from_spec(spec)
@@ -66,7 +74,7 @@ def grade(file):
         points = string_to_math(out)
         with open('report.csv','a',newline='') as f:
             w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            w.writerow([i,out,points])
+            w.writerow([i,days[i],out,points])
     os.chdir(root)
     shutil.copyfile(os.path.join(root,'testing','report.csv'), os.path.join(root,'report.csv'))
     shutil.rmtree('testing')
@@ -89,9 +97,9 @@ def string_to_math(thing):
 def main():
     assignment, file = intro()
     print()
-    gather(assignment, file)
+    days = gather(assignment, file)
     print('files gatherd, moving to grading')
-    grade(file)
+    grade(file, days)
     print("Testing complete")
     #input("Press enter to exit...")
 
