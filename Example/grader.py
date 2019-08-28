@@ -1,4 +1,4 @@
-import os, shutil, importlib.util, csv, subprocess
+import os, shutil, importlib.util, csv, subprocess, datetime
 
 assignments = {'00':'00-hello-world','01':'01-calculator','02':'02-fortune-cookie',
 '03':'03-coin-flipper','04':'04-guess-my-number-2.0','05':'05-dice-roller',
@@ -12,6 +12,8 @@ file_names = {'00':'hello_world.py','01':'calculator.py','02':'fortune_cookie.py
 '09':'WJ2.py','10':'scrambler.py','11':'character_creator.py',
 '12':'guess_AI.py','13':'pig_latin.py','14':'CC2.py',
 '15':'TC2.py','1':'hi.py'}
+#https://docs.python.org/3.7/library/datetime.html#datetime.datetime
+due_dates = {'00':datetime.datetime(year, month, day[, hour[, minute[, second[, microsecond,'01':datetime.date(),'02':datetime.date()}
 
 def intro():
     print("Python Grader")
@@ -52,7 +54,8 @@ def gather(assignment, file):
         shutil.copyfile(os.path.join(root,folder,assignment,file), os.path.join(root,'testing',name))
         p = subprocess.Popen(["git","log","-1","--format=%cd"],stdout=PIPE)
         out = p.communicate()[0].decode()
-        days[name]= out
+        days[name] = out
+    days = late_check(days)
     return days
 
 
