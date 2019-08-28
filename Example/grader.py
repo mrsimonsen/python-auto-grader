@@ -62,9 +62,23 @@ def gather(assignment, file):
         shutil.copyfile(os.path.join(root,folder,assignment,file), os.path.join(root,'testing',name))
         p = subprocess.Popen(["git","log","-1","--format=%cd"],stdout=PIPE)
         out = p.communicate()[0].decode()
-        days[name] = out
-    days = late_check(days)
+        time = format_date(out)
+        days[name] = time
     return days
+
+def format_date(raw):
+    #format Wed Aug 28 13:09:44 2019 -0600
+    year =
+    month =
+    day =
+    hour =
+    minute =
+    second =
+    date = datetime.datetime(year, month, day, hour, minute, second)
+    return date
+
+    
+def late_check(days):
 
 
 
