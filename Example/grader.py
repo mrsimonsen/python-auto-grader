@@ -13,7 +13,15 @@ file_names = {'00':'hello_world.py','01':'calculator.py','02':'fortune_cookie.py
 '12':'guess_AI.py','13':'pig_latin.py','14':'CC2.py',
 '15':'TC2.py','1':'hi.py'}
 #https://docs.python.org/3.7/library/datetime.html#datetime.datetime
-due_dates = {'00':datetime.datetime(year, month, day[, hour[, minute[, second[, microsecond,'01':datetime.date(),'02':datetime.date()}
+due_dates = {'00':datetime.datetime(2109, 9, 1, 23, 59,59),
+'01':datetime.datetime(2019, 9, 8, 23, 59,59),'02':datetime.datetime(2109,9,15,23,59,59),
+'03':datetime.datetime(2019,9,15,23,59,59),'04':datetime.datetime(2019,9,22,23,59,59),
+'05':datetime.datetime(2019,9,29,23,59,59),'06':datetime.datetime(2019,9,29,23,59,59),
+'07':datetime.datetime(2019,10,6,23,59,59),'08':datetime.datetime(2019,10,6,23,59,59),
+'09':datetime.datetime(2019,10,13,23,59,59),'10':datetime.datetime(2019,10,20,23,59,59),
+'11':datetime.datetime(2019,10,27,23,59,59),'12':datetime.datetime(2019,11,3,23,59,59),
+'13':datetime.datetime(2019,11,10,23,59,59),'14':datetime.datetime(2019,11,17,23,59,59),
+'15':datetime.datetime(2019,12,1,23,59,59)}
 
 def intro():
     print("Python Grader")
