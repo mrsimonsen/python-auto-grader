@@ -21,7 +21,7 @@ due_dates = {'00':datetime.datetime(2109, 9, 1, 23, 59,59),
 '09':datetime.datetime(2019,10,13,23,59,59),'10':datetime.datetime(2019,10,20,23,59,59),
 '11':datetime.datetime(2019,10,27,23,59,59),'12':datetime.datetime(2019,11,3,23,59,59),
 '13':datetime.datetime(2019,11,10,23,59,59),'14':datetime.datetime(2019,11,17,23,59,59),
-'15':datetime.datetime(2019,12,1,23,59,59)}
+'15':datetime.datetime(2019,12,1,23,59,59),'1':datetime.datetime.today()}
 
 def intro():
     print("Python Grader")
@@ -33,10 +33,11 @@ def intro():
         try:
             assign_name = assignments[assign]
             file = file_names[assign]
+            due = due_dates[assign]
             n = False
         except:
             print("That wasn't a valid assignment number!")
-    return assign_name, file
+    return assign_name, file, due
 
 def gather(assignment, file):
     root = os.getcwd()
@@ -60,34 +61,39 @@ def gather(assignment, file):
     for folder in subfolders:
         name = folder+'_'+file
         shutil.copyfile(os.path.join(root,folder,assignment,file), os.path.join(root,'testing',name))
-        p = subprocess.Popen(["git","log","-1","--format=%cd"],stdout=PIPE)
+        p = subprocess.Popen(["git","log","-1","--format=%ci"],stdout=PIPE)
         out = p.communicate()[0].decode()
         time = format_date(out)
         days[name] = time
     return days
 
 def format_date(raw):
-    #format Wed Aug 28 13:09:44 2019 -0600
-    year =
-    month =
-    day =
-    hour =
-    minute =
-    second =
+    #format '2019-08-28 14:46:11 -0600'
+    #index:  0123456789012345678901234
+    year = int(raw[:4])
+    month = int(raw[5:7])
+    day = int(raw[8:10])
+    hour = int(raw[11:13])
+    minute = int(raw[14:16])
+    second = int(raw[17:19])
     date = datetime.datetime(year, month, day, hour, minute, second)
     return date
 
-    
-def late_check(days):
+
+def late_check(time, due):
+    #if the submission is greater than the duedate it is late
+    if time > due:
+        return True #it is late
+    else:
+        return False #it is not late
 
 
-
-def grade(file,days):
+def grade(file,days, due):
     root = os.getcwd()
     os.chdir('testing')
     with open('report.csv','w',newline='') as f:
         w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        w.writerow(['Repo name','on time?','tests passed','points earned'])
+        w.writerow(['Repo name','late?','tests passed','points earned'])
     file = "test_"+file
     spec = importlib.util.spec_from_file_location(file,os.path.join(root,file))
     master = importlib.util.module_from_spec(spec)
@@ -97,9 +103,10 @@ def grade(file,days):
     for i in files:
         out = master.tests(i)
         points = string_to_math(out)
+        late = late_check(days[i], due)
         with open('report.csv','a',newline='') as f:
             w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            w.writerow([i,days[i],out,points])
+            w.writerow([i,late,out,points])
     os.chdir(root)
     shutil.copyfile(os.path.join(root,'testing','report.csv'), os.path.join(root,'report.csv'))
     shutil.rmtree('testing')
@@ -120,11 +127,11 @@ def string_to_math(thing):
     return round(score/total * 10,2)
 
 def main():
-    assignment, file = intro()
+    assignment, file, due = intro()
     print()
     days = gather(assignment, file)
     print('files gatherd, moving to grading')
-    grade(file, days)
+    grade(file, days, due)
     print("Testing complete")
     #input("Press enter to exit...")
 
