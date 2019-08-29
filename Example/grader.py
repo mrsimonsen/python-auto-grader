@@ -103,9 +103,14 @@ def grade(file,days, due):
     files = [f.name for f in os.scandir() if f.is_file()]
     files.remove('report.csv')
     for i in files:
-        out = master.tests(i)
-        points = string_to_math(out)
-        late = late_check(days[i], due)
+        try:
+            out = master.tests(i)
+            points = string_to_math(out)
+            late = late_check(days[i], due)
+        except:
+            out = '0/0'
+            points = 0
+            late = False
         with open('report.csv','a',newline='') as f:
             w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
             w.writerow([i,late,out,points])
