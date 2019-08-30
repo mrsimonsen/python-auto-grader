@@ -99,31 +99,30 @@ def format_usernames():
 
 def grade(file,days, due):
     root = os.getcwd()
+    username = format_usernames()
     os.chdir('testing')
     with open('report.csv','w',newline='') as f:
         w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        w.writerow(['GitHub_File','tests passed','Weber name','points earned','is late?'])
+        w.writerow(['GitHub_File','Weber name','points earned','is late?'])
     tests = "test_"+file
     spec = importlib.util.spec_from_file_location(tests,os.path.join(root,tests))
     master = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(master)
     files = [f.name for f in os.scandir() if f.is_file()]
     files.remove('report.csv')
-    username = format_usernames()
     for i in files:
         try:
             out = master.tests(i)
             points = string_to_math(out)
             late = late_check(days[i], due)
-            git = i[:-len(file)]
+            name = username.get(i[:-(1+len(file))],'GitHub name Error')
         except:
-            out = '0/0'
             points = 0
             late = False
-            git = 'What is you GitHub username?'
+            name = 'Test error'
         with open('report.csv','a',newline='') as f:
             w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            w.writerow([i,out,username[git],points,late])
+            w.writerow([i,name,points,late])
     os.chdir(root)
     shutil.copyfile(os.path.join(root,'testing','report.csv'), os.path.join(root,'report.csv'))
     shutil.rmtree('testing')
@@ -145,7 +144,7 @@ def string_to_math(thing):
 
 def main():
     assignment, file, due = intro()
-    print()
+    print("gathering files, please wait")
     days = gather(assignment, file)
     print('files gatherd, moving to grading')
     grade(file, days, due)
