@@ -81,7 +81,6 @@ def format_date(raw):
     date = datetime.datetime(year, month, day, hour, minute, second)
     return date
 
-
 def late_check(time, due):
     #if the submission is greater than the duedate it is late
     if time > due:
@@ -89,31 +88,42 @@ def late_check(time, due):
     else:
         return False #it is not late
 
+def format_usernames():
+    username = {}
+    with open('1030 usernames - Form Responses 1.csv','r',newline='') as f:
+        #format = TIMESTAMP, GITHUB, WEBER
+        raw = csv.reader(f, delimiter=',', quotechar='|')
+        for row in raw:
+            username[row[1]]=row[2]
+    return username
 
 def grade(file,days, due):
     root = os.getcwd()
     os.chdir('testing')
     with open('report.csv','w',newline='') as f:
         w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        w.writerow(['Repo name','late?','tests passed','points earned'])
-    file = "test_"+file
-    spec = importlib.util.spec_from_file_location(file,os.path.join(root,file))
+        w.writerow(['GitHub_File','tests passed','Weber name','points earned','is late?'])
+    tests = "test_"+file
+    spec = importlib.util.spec_from_file_location(tests,os.path.join(root,tests))
     master = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(master)
     files = [f.name for f in os.scandir() if f.is_file()]
     files.remove('report.csv')
+    username = format_usernames()
     for i in files:
         try:
             out = master.tests(i)
             points = string_to_math(out)
             late = late_check(days[i], due)
+            git = i[:-len(file)]
         except:
             out = '0/0'
             points = 0
             late = False
+            git = 'What is you GitHub username?'
         with open('report.csv','a',newline='') as f:
             w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            w.writerow([i,late,out,points])
+            w.writerow([i,out,username[git],points,late])
     os.chdir(root)
     shutil.copyfile(os.path.join(root,'testing','report.csv'), os.path.join(root,'report.csv'))
     shutil.rmtree('testing')
