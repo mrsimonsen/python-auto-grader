@@ -118,8 +118,8 @@ def grade(file,days, due):
             name = username.get(i[:-(1+len(file))],'GitHub name Error')
         except:
             points = 0
-            late = False
-            name = 'Test error'
+            late = True
+            name = 'Student Code Failed - did you merge?'
         with open('report.csv','a',newline='') as f:
             w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
             w.writerow([i,name,points,late])
