@@ -1,10 +1,12 @@
 import os, shutil, importlib.util, csv, subprocess, datetime, shelve
-from data_maker import *
+from data_maker import Assignment,Student
+from data_maker import main as setup
 
 def intro():
     print("Python Grader")
     print("This program needs to be ran from the parent directory of the collection of student repos")
     print()
+    setup()
     n = True
     while n:
         assign = input("What is the number of the assignment folder?\n")
@@ -28,7 +30,7 @@ def gather(a):
     os.mkdir("testing")
     PIPE = subprocess.PIPE
     for s in students:
-        shutil.copyfile(os.path.join(root,s.github,a.folder,a.file), os.path(join(root,'testing',s.github+'_'+a.file)))
+        shutil.copyfile(os.path.join(root,s.github,a.folder,a.file), os.path.join(root,'testing',s.github+'_'+a.file))
         os.chdir(s.github)
         p = subprocess.Popen(["git","log","-1","--format=%ci"],stdout=PIPE)
         out = p.communicate()[0].decode()
@@ -78,13 +80,13 @@ def grade(a):
             if student.github == name:
                 student.set_grade(a, points)
     f = open('report.csv','a',newline='')
-    w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    w = csv.writer(f,delimiter=',',quotechar='"', quoting=csv.QUOTE_MINIMAL)
     for i in s:
-        w.writerow([i.name,i.assignment.folder,s.score,s.late])
+        w.writerow([i.name,i.assignment.folder,i.score,i.late])
     f.close()
-    data['students']=s
-    data.close()
     os.chdir(root)
+    data['students'] = s
+    data.close()
     shutil.copyfile(os.path.join(root,'testing','report.csv'), os.path.join(root,'report.csv'))
     shutil.rmtree('testing')
 
