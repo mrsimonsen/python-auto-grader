@@ -17,46 +17,26 @@ def intro():
         data.close()
     return assign_obj
 
-def gather(assign_obj):
+def gather(a):
     root = os.getcwd()
     try:
         shutil.rmtree('testing')
     except:
         pass#old testing folder already removed
-    subfolders = [f.name for f in os.scandir(root) if f.is_dir()]
-    try:
-        subfolders.remove('.git')
-    except ValueError:
-        pass#folder doesn't exist
-    try:
-        subfolders.remove('__pycache__')
-    except ValueError:
-        pass#folder doesn't exist
     data = shelve.open('grading_data')
     students = data['students']
     os.mkdir("testing")
     PIPE = subprocess.PIPE
-    for folder in subfolders:
-
-
-
-
-
-
-
-
-
-
-
-        name = folder+'_'+file
-        shutil.copyfile(os.path.join(root,folder,assignment,file), os.path.join(root,'testing',name))
-        os.chdir(folder)
+    for s in students:
+        shutil.copyfile(os.path.join(root,s.github,a.folder,a.file), os.path(join(root,'testing',s.github+'_'+a.file)))
+        os.chdir(s.github)
         p = subprocess.Popen(["git","log","-1","--format=%ci"],stdout=PIPE)
         out = p.communicate()[0].decode()
         os.chdir(root)
         time = format_date(out)
-        days[name] = time
-    return days
+        s.submit = time
+    data['students']=students
+    data.close()
 
 def format_date(raw):
     #format '2019-08-28 14:46:11 -0600'
@@ -70,32 +50,31 @@ def format_date(raw):
     date = datetime.datetime(year, month, day, hour, minute, second)
     return date
 
-def grade(file,days, due):
+def grade(a):
+    data = shelve.open('grading_data')
+    s = data['students']
     root = os.getcwd()
-    username = format_usernames()
     os.chdir('testing')
     with open('report.csv','w',newline='') as f:
         w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        w.writerow(['GitHub_File','Weber name','points earned','is late?'])
-    tests = "test_"+file
-    spec = importlib.util.spec_from_file_location(tests,os.path.join(root,tests))
-    master = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(master)
+        w.writerow(['Student Name','assignment name','points earned','is late?'])
+    test_name = "test_"+a.file
+    spec = importlib.util.spec_from_file_location(test_name,os.path.join(root,test_name))
+    tests = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tests)
     files = [f.name for f in os.scandir() if f.is_file()]
     files.remove('report.csv')
     for i in files:
         try:
-            out = master.tests(i)
-            points = string_to_math(out)
-            late = late_check(days[i], due)
-            name = username.get(i[:-(1+len(file))],'GitHub name Error')
+            out = tests.tests(i)
+            name = i[:-(1+len(a.file))]
         except:
             points = 0
-            late = True
-            name = 'Student Code Failed - did you merge?'
-        with open('report.csv','a',newline='') as f:
-            w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            w.writerow([i,name,points,late])
+        else:
+            points = string_to_math(out)
+
+        s.set_grade(a,points)
+
     os.chdir(root)
     shutil.copyfile(os.path.join(root,'testing','report.csv'), os.path.join(root,'report.csv'))
     shutil.rmtree('testing')
@@ -118,9 +97,9 @@ def string_to_math(thing):
 def main():
     assign_obj = intro()
     print("gathering files, please wait")
-    days = gather(assign_obj)
+    gather(assign_obj)
     print('files gatherd, moving to grading')
-    grade(file, days, due)
+    grade(assign_obj)
     print("Testing complete")
     #input("Press enter to exit...")
 
