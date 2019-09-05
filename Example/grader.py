@@ -67,14 +67,23 @@ def grade(a):
     for i in files:
         try:
             out = tests.tests(i)
-            name = i[:-(1+len(a.file))]
         except:
-            points = 0
+            #python error running tests - probably because they didn't merge
+            points = 0#so they failed
         else:
             points = string_to_math(out)
-
-        s.set_grade(a,points)
-
+        #seperate github username from 'github_file.py'
+        name = name = i[:-(1+len(a.file))]
+        for student in s:
+            if student.github == name:
+                student.set_grade(a, points)
+    f = open('report.csv','a',newline='')
+    w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    for i in s:
+        w.writerow([i.name,i.assignment.folder,s.score,s.late])
+    f.close()
+    data['students']=s
+    data.close()
     os.chdir(root)
     shutil.copyfile(os.path.join(root,'testing','report.csv'), os.path.join(root,'report.csv'))
     shutil.rmtree('testing')
