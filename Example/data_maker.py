@@ -30,7 +30,7 @@ class Student(object):
     def set_grade(self, assign_obj, score):
         self.assignment = assign_obj
         self.score = score
-        if assign_obj.due < self.submit:
+        if assign_obj.due > self.submit:
             self.late = False
 def main():
     #create shelve file, overwrite old file if exists
