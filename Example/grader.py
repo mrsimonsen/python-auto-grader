@@ -68,6 +68,7 @@ def grade(a):
     files.remove('report.csv')
     for i in files:
         try:
+            print(f"Grading: {i}")
             out = tests.tests(i)
         except:
             #python error running tests - probably because they didn't merge
