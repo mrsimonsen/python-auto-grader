@@ -9,7 +9,8 @@ class Assignment(object):
         self.due = due
 
     def __str__(self):
-        rep = f"{self.folder}\\{self.file}\n{self.due}"
+        rep = f"{self.folder}\\{self.file}"
+        rep += f"\n{self.due}"
         return rep
 class Student(object):
     '''a student with name, weber username, and github username'''
@@ -55,7 +56,7 @@ def main():
     '03':datetime.datetime(2019,9,15,23,59,59),'04':datetime.datetime(2019,9,22,23,59,59),
     '05':datetime.datetime(2019,9,29,23,59,59),'06':datetime.datetime(2019,9,29,23,59,59),
     '07':datetime.datetime(2019,10,6,23,59,59),'08':datetime.datetime(2019,10,6,23,59,59),
-    '09':datetime.datetime(2019,10,13,23,59,59),'10':datetime.datetime(2019,10,20,23,59,59),
+    '09':datetime.datetime(2019,10,13,23,59,59),'10':datetime.datetime(2019,10,27,23,59,59),
     '11':datetime.datetime(2019,10,27,23,59,59),'12':datetime.datetime(2019,11,3,23,59,59),
     '13':datetime.datetime(2019,11,10,23,59,59),'14':datetime.datetime(2019,11,17,23,59,59),
     '15':datetime.datetime(2019,12,1,23,59,59),'1':datetime.datetime.today()}
