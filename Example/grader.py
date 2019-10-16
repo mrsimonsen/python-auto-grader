@@ -82,6 +82,7 @@ def grade(a):
                 student.set_grade(a, points)
     f = open('report.csv','a',newline='')
     w = csv.writer(f,delimiter=',',quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    s.sort(key=lambda x: x.name)
     for i in s:
         w.writerow([i.name,i.assignment.folder,i.score,i.late])
     f.close()
