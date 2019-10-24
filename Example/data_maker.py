@@ -57,9 +57,9 @@ def main():
     '05':datetime.datetime(2019,9,29,23,59,59),'06':datetime.datetime(2019,9,29,23,59,59),
     '07':datetime.datetime(2019,10,6,23,59,59),'08':datetime.datetime(2019,10,6,23,59,59),
     '09':datetime.datetime(2019,10,13,23,59,59),'10':datetime.datetime(2019,10,27,23,59,59),
-    '11':datetime.datetime(2019,10,27,23,59,59),'12':datetime.datetime(2019,11,3,23,59,59),
-    '13':datetime.datetime(2019,11,10,23,59,59),'14':datetime.datetime(2019,11,17,23,59,59),
-    '15':datetime.datetime(2019,12,1,23,59,59),'1':datetime.datetime.today()}
+    '11':datetime.datetime(2019,11,3,23,59,59),'12':datetime.datetime(2019,11,10,23,59,59),
+    '13':datetime.datetime(2019,11,17,23,59,59),'14':datetime.datetime(2019,12,1,23,59,59),
+    '15':datetime.datetime(2019,12,15,23,59,59),'1':datetime.datetime.today()}
     for i in assignments:
         data[i]=Assignment(folders[i],file_names[i],due_dates[i])
 
