@@ -25,18 +25,23 @@ def gather(a):
         shutil.rmtree('testing')
     except:
         pass#old testing folder already removed
+    finally:
+        os.mkdir("testing")
     data = shelve.open('grading_data')
     students = data['students']
-    os.mkdir("testing")
     PIPE = subprocess.PIPE
     for s in students:
-        shutil.copyfile(os.path.join(root,s.github,a.folder,a.file), os.path.join(root,'testing',s.github+'_'+a.file))
+        os.mkdir("testing\\"+s.github)
+        if a.folder == "15-trivia-challenge-2.0":
+            shutil.copyfile(os.path.join(root,"hs_helper.py"), os.path.join(root,'testing',s.github,"hs_helper.py"))
+            shutil.copyfile(os.path.join(root,"trivia.txt"),os.path.join(root,'testing',s.github,"trivia.txt"))
+            shutil.copyfile(os.path.join(root,"highscores.dat"),os.path.join(root,'testing',s.github,"highscores.dat"))
+        shutil.copyfile(os.path.join(root,s.github,a.folder,a.file), os.path.join(root,'testing',s.github,a.file))
         os.chdir(s.github)
         p = subprocess.Popen(["git","log","-1","--format=%ci"],stdout=PIPE)
         out = p.communicate()[0].decode()
         os.chdir(root)
-        time = format_date(out)
-        s.submit = time
+        s.submit = format_date(out)
     data['students']=students
     data.close()
 
