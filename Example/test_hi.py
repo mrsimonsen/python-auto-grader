@@ -1,15 +1,12 @@
-import importlib.util
-
-def tests(file):
-    spec = importlib.util.spec_from_file_location(file,f"./{file}")
-    student = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(student)
-    total = 1
+import hi as student
+def main():
+    total = 0
     score = 0
 
+    total += 1
     if student.hi() == "hi":
         score += 1
+    print(f"{score}/{total}")
 
-
-    rep = f"{score}/{total}"
-    return rep
+if __name__ == '__main__':
+    main()

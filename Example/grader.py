@@ -1,6 +1,8 @@
-import os, shutil, importlib.util, csv, subprocess, datetime, shelve
+import os, shutil, importlib.util, csv, subprocess, datetime, shelve, sys
 from data_maker import Assignment,Student
 from data_maker import main as setup
+
+PIPE = subprocess.PIPE
 
 def intro():
     print("Python Grader")
@@ -29,7 +31,6 @@ def gather(a):
         os.mkdir("testing")
     data = shelve.open('grading_data')
     students = data['students']
-    PIPE = subprocess.PIPE
     for s in students:
         os.mkdir("testing\\"+s.github)
         if a.folder == "15-trivia-challenge-2.0":
@@ -37,6 +38,7 @@ def gather(a):
             shutil.copyfile(os.path.join(root,"trivia.txt"),os.path.join(root,'testing',s.github,"trivia.txt"))
             shutil.copyfile(os.path.join(root,"highscores.dat"),os.path.join(root,'testing',s.github,"highscores.dat"))
         shutil.copyfile(os.path.join(root,s.github,a.folder,a.file), os.path.join(root,'testing',s.github,a.file))
+        shutil.copyfile(os.path.join(root,"test_"+a.file), os.path.join(root,'testing',s.github,'Test.py'))
         os.chdir(s.github)
         p = subprocess.Popen(["git","log","-1","--format=%ci"],stdout=PIPE)
         out = p.communicate()[0].decode()
@@ -65,26 +67,23 @@ def grade(a):
     with open('report.csv','w',newline='') as f:
         w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
         w.writerow(['Student Name','assignment name','points earned','is late?'])
-    test_name = "test_"+a.file
-    spec = importlib.util.spec_from_file_location(test_name,os.path.join(root,test_name))
-    tests = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(tests)
-    files = [f.name for f in os.scandir() if f.is_file()]
-    files.remove('report.csv')
-    for i in files:
-        try:
-            print(f"Grading: {i}")
-            out = tests.tests(i)
-        except:
-            #python error running tests - probably because they didn't merge
-            points = 0#so they failed
+
+    folders = [f.name for f in os.scandir() if f.is_dir()]
+    for i in folders:
+        print(f"Grading: {i}")
+        os.chdir(i)
+        proc = subprocess.Popen("py test.py", shell=True,stdout=PIPE, stderr=PIPE)
+        out,err = proc.communicate()
+        if err:
+            print(err.decode())
+            points = 0
         else:
-            points = string_to_math(out)
+            points = string_to_math(out.decode()[:-2])#remove /r/n
         #seperate github username from 'github_file.py'
-        name = name = i[:-(1+len(a.file))]
         for student in s:
-            if student.github == name:
+            if student.github == i:
                 student.set_grade(a, points)
+        os.chdir('..');#back to testing folder
     f = open('report.csv','a',newline='')
     w = csv.writer(f,delimiter=',',quotechar='"', quoting=csv.QUOTE_MINIMAL)
     s.sort(key=lambda x: x.name)
