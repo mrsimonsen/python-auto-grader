@@ -18,7 +18,7 @@ class Student(object):
     def __init__(self, name, github):
         self.name = name
         self.github = github
-        self.assignment = Assignment('error','',datetime.datetime.today(),'')
+        self.assignment = Assignment('error','',datetime.datetime.today())
         self.score = 0
         self.late = True
         self.submit = None
@@ -44,11 +44,11 @@ def main():
     '09':'09-word-jumble-2.0','10':'10-sentence-scrambler','11':'11-character-creator',
     '12':'12-guess-your-number','13':'13-pig-latin','14':'14-critter-caretaker-2.0',
     '15':'15-trivia-challenge-2.0','1':'test1'}
-    file_names = {'00':'hello_world.py',,'01':'calculator.py',,'02':'fortune_cookie.py',,
-    '03':'coin_flipper.py',,'04':'GMN2.py',,'05':'dice_roller.py',,
-    '06':'counter.py',,'07':'reverse_message.py',,'08':'right_triangle.py',,
-    '09':'WJ2.py',,'10':'scrambler.py',,'11':'character_creator.py',,
-    '12':'guess_AI.py',,'13':'pig_latin.py',,'14':'CC2.py',,
+    file_names = {'00':'hello_world.py','01':'calculator.py','02':'fortune_cookie.py',
+    '03':'coin_flipper.py','04':'GMN2.py','05':'dice_roller.py',
+    '06':'counter.py','07':'reverse_message.py','08':'right_triangle.py',
+    '09':'WJ2.py','10':'scrambler.py','11':'character_creator.py',
+    '12':'guess_AI.py','13':'pig_latin.py','14':'CC2.py',
     '15':'TC2.py','1':'hi.py'}
     due_dates = {'00':datetime.datetime(2019, 9, 1, 23, 59,59),
     '01':datetime.datetime(2019, 9, 8, 23, 59,59),'02':datetime.datetime(2019,9,15,23,59,59),
