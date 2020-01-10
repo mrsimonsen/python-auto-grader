@@ -66,7 +66,7 @@ def grade(a):
     os.chdir('testing')
     with open('report.csv','w',newline='') as f:
         w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        w.writerow(['Student Name','assignment name','points earned','is late?'])
+        w.writerow(['Period','Student Name','assignment name','points earned','is late?'])
 
     folders = [f.name for f in os.scandir() if f.is_dir()]
     for i in folders:
@@ -88,7 +88,7 @@ def grade(a):
     w = csv.writer(f,delimiter=',',quotechar='"', quoting=csv.QUOTE_MINIMAL)
     s.sort(key=lambda x: x.name)
     for i in s:
-        w.writerow([i.name,i.assignment.folder,i.score,i.late])
+        w.writerow([i.period,i.name,i.assignment.folder,i.score,i.late])
     f.close()
     os.chdir(root)
     data['students'] = s

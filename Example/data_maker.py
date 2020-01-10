@@ -15,16 +15,17 @@ class Assignment(object):
 class Student(object):
     '''a student with name, weber username, and github username'''
 
-    def __init__(self, name, github):
+    def __init__(self, name, period, github):
         self.name = name
         self.github = github
+        self.period = period
         self.assignment = Assignment('error','',datetime.datetime.today())
         self.score = 0
         self.late = True
         self.submit = None
 
     def __str__(self):
-        rep = f"{self.name}\n{self.github}\n--Current Assignment--\n{self.assignment.folder}\\{self.assignment.file}\n{self.score} points\nSubmitted:{self.submit}\nLate = {self.late}"
+        rep = f"{self.name} Period:{self.period}\n{self.github}\n--Current Assignment--\n{self.assignment.folder}\\{self.assignment.file}\n{self.score} points\nSubmitted:{self.submit}\nLate = {self.late}"
         return rep
 
     def set_grade(self, assign_obj, score):
@@ -71,7 +72,7 @@ def main():
         for row in raw:
             if row[1] == "What is your First Name?":
                 continue#skip the first row/header
-            students.append(Student(f"{row[2]}, {row[1]}",row[3]))
+            students.append(Student(f"{row[2]}, {row[1]}",row[3],row[4]))
     data['students'] = students
 
     #save all the things
