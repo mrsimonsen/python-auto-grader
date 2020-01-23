@@ -13,6 +13,6 @@ outline of the program:
 
 
 Additional features:
-* create a files of all assignment paths and make a menu to choose assignment
+* create a files of all assignment paths and make a menu to choose assignment, able to run multiple grading files.
 * create a file that is a collection of student object that link grades to assignment, student names to usernames, and class period
 * add testing when typing in files to make sure they exist before running grading
