@@ -8,7 +8,6 @@ class App(Frame):
 
     def create_widgets(self):
         Label(self,text="Select assignment to grade:").grid(row=0,column=0,sticky=W, columnspan = 2)
-        Label(self,text="Select one.").grid(row=1,column=0,sticky=W)
         self.anum=StringVar()
         Radiobutton(self,text='1', variable=self.anum, value="test 1", command=self.update_text).grid(row=2,column=0,sticky=W)
         Radiobutton(self,text='2', variable=self.anum, value="test 2", command=self.update_text).grid(row=2,column=1,sticky=W)
@@ -40,6 +39,13 @@ class App(Frame):
     def run(self):
         self.results_txt.delete(0.0,END)
         self.results_txt.insert(0.0, "GRADING!")
+        message = gather()
+        self.results_txt.delete(0.0,END)
+        self.results_txt.insert(0.0, message)
+        feedback = grade()
+        if feedback:
+            self.results_txt.delete(0.0,END)
+            self.results_txt.insert(0.0, feedback)
 
     def update_text(self):
         message = f"You selected assignment \"{self.anum.get()}\" to grade."
