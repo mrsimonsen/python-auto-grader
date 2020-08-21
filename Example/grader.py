@@ -38,7 +38,7 @@ def intro():
 		print("Python Grader")
 		print("This program needs to be ran from the parent directory of the collection of student repos")
 		print()
-		assign = input("What is the number of the assignment folder?\n")
+		assign = input("What is the number of the assignment?\n")
 		try:
 			data = shelve.open('grading_data')
 			assign_obj = data[assign]
@@ -61,7 +61,7 @@ def gather(a):
 	for s in students:
 		os.chdir('testing')
 		os.mkdir(s.github)
-		run(['cp',  os.path.join(root,s.github,a.folder,a.file), os.path.join(root,'testing',s.github,a.file)])
+		run(['cp',  os.path.join(root,s.github,a.file), os.path.join(root,'testing',s.github,a.file)])
 		run(['cp', os.path.join(root,a.test), os.path.join(root,'testing',s.github,'Test.py')])
 		os.chdir('..')
 		os.chdir(s.github)
@@ -88,7 +88,7 @@ def grade(a):
 	data.close()
 	root = os.getcwd()
 	os.chdir('testing')
-	with open(f'{a.folder[:2]}report.csv','w',newline='') as f:
+	with open(f'{a.file[:2]}report.csv','w',newline='') as f:
 		w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
 		w.writerow(['Period','Student Name','Assignment Name','Points Earned','Is Late?'])
 	folders = [f.name for f in os.scandir() if f.is_dir()]
@@ -107,7 +107,7 @@ def grade(a):
 		for student in s:
 			if student.github == f:
 				student.set_grade(a, points)
-	f = open(f'{a.folder[:2]}report.csv','a',newline='')
+	f = open(f'{a.file[:2]}report.csv','a',newline='')
 	w = csv.writer(f,delimiter=',',quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	s.sort(key=lambda x: x.name)
 	for i in s:
@@ -115,7 +115,7 @@ def grade(a):
 		f.close()
 		os.chdir(root)
 	os.chdir('..')
-	run(['cp', f"Repos/Testing/{a.folder[:2]}report.csv", f"{a.folder[:2]}report.csv"])
+	run(['cp', f"Repos/Testing/{a.file[:2]}report.csv", f"{a.file[:2]}report.csv"])
 	os.chdir(root)
 
 def string_to_math(thing):
