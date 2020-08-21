@@ -88,7 +88,7 @@ def grade(a):
 	data.close()
 	root = os.getcwd()
 	os.chdir('testing')
-	with open(f'{a.file[:2]}report.csv','w',newline='') as f:
+	with open(f'{a.test[-5:-4]}report.csv','w',newline='') as f:
 		w = csv.writer(f,delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
 		w.writerow(['Period','Student Name','Assignment Name','Points Earned','Is Late?'])
 	folders = [f.name for f in os.scandir() if f.is_dir()]
@@ -107,11 +107,11 @@ def grade(a):
 		for student in s:
 			if student.github == f:
 				student.set_grade(a, points)
-	f = open(f'{a.file[:2]}report.csv','a',newline='')
+	f = open(f'{a.test[-5:-4]}report.csv','a',newline='')
 	w = csv.writer(f,delimiter=',',quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	s.sort(key=lambda x: x.name)
 	for i in s:
-		w.writerow([i.period,i.name,i.assignment.folder,i.score,i.late])
+		w.writerow([i.period,i.name,i.assignment.file[-5:-4],i.score,i.late])
 		f.close()
 		os.chdir(root)
 	os.chdir('..')
