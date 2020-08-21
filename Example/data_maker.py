@@ -75,7 +75,7 @@ def main():
 	'13':datetime.datetime(2020,11,15,23,59,59),
 	'14':datetime.datetime(2020,11,29,23,59,59),
 	'15':datetime.datetime(2020,12,13,23,59,59),
-	'1':datetime.today()
+	'1':datetime.datetime.today()
 	}
 	tests = {'00': 'test_00.py',
 	'01': 'test_01.py',
@@ -110,5 +110,5 @@ def main():
 				students.append(Student(f"{row[2]}, {row[1]}",row[3],row[4]))
 				data['students'] = students
 
-				#save all the things
-				data.close()
+	#save all the things
+	data.close()
