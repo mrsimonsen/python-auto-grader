@@ -129,7 +129,7 @@ def string_to_math(thing):
 
 def main():
 	assign_list = None
-	if len(sys.argv)-2:
+	if len(sys.argv) < 1:
 		assign_list = multi_run(assign_list)
 		while assign_list:
 			assign_obj = assign_list.pop(0)
